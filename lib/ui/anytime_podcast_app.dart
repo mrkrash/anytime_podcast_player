@@ -128,10 +128,22 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
       });
     });
 
-    if (widget.mobileSettingsService.themeDarkMode) {
-      theme = Themes.darkTheme().themeData;
-    } else {
+    if (
+          widget.mobileSettingsService.themeMode == ThemeMode.light.name ||
+          (
+              widget.mobileSettingsService.themeMode == ThemeMode.system.name &&
+                  MediaQuery.of(context).platformBrightness == Brightness.light
+          )
+    ) {
       theme = Themes.lightTheme().themeData;
+    } else if (
+          widget.mobileSettingsService.themeMode == ThemeMode.dark.name ||
+          (
+              widget.mobileSettingsService.themeMode == ThemeMode.system.name &&
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+          )
+    ) {
+      theme = Themes.darkTheme().themeData;
     }
   }
 

@@ -14,7 +14,7 @@ class SettingsBloc extends Bloc {
   final log = Logger('SettingsBloc');
   final SettingsService _settingsService;
   final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
-  final BehaviorSubject<bool> _darkMode = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _themeMode = BehaviorSubject<String>();
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadOnSDCard = BehaviorSubject<bool>();
   final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
@@ -42,7 +42,7 @@ class SettingsBloc extends Bloc {
     }
 
     _currentSettings = AppSettings(
-      theme: _settingsService.themeDarkMode ? 'dark' : 'light',
+      theme: _settingsService.themeMode,
       markDeletedEpisodesAsPlayed: _settingsService.markDeletedEpisodesAsPlayed,
       storeDownloadsSDCard: _settingsService.storeDownloadsSDCard,
       playbackSpeed: _settingsService.playbackSpeed,
@@ -59,10 +59,10 @@ class SettingsBloc extends Bloc {
 
     _settings.add(_currentSettings);
 
-    _darkMode.listen((bool darkMode) {
-      _currentSettings = _currentSettings.copyWith(theme: darkMode ? 'dark' : 'light');
+    _themeMode.listen((String mode) {
+      _currentSettings = _currentSettings.copyWith(theme: mode);
       _settings.add(_currentSettings);
-      _settingsService.themeDarkMode = darkMode;
+      _settingsService.themeMode = mode;
     });
 
     _markDeletedAsPlayed.listen((bool mark) {
@@ -142,7 +142,7 @@ class SettingsBloc extends Bloc {
 
   Stream<AppSettings> get settings => _settings.stream;
 
-  void Function(bool) get darkMode => _darkMode.add;
+  void Function(String) get themeMode => _themeMode.add;
 
   void Function(bool) get storeDownloadonSDCard => _storeDownloadOnSDCard.add;
 
@@ -170,7 +170,7 @@ class SettingsBloc extends Bloc {
 
   @override
   void dispose() {
-    _darkMode.close();
+    _themeMode.close();
     _markDeletedAsPlayed.close();
     _storeDownloadOnSDCard.close();
     _playbackSpeed.close();

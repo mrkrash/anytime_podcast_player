@@ -5,8 +5,11 @@
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../ui/themes.dart';
 
 /// An implementation [SettingService] for mobile devices backed by
 /// shared preferences.
@@ -47,15 +50,13 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
-  bool get themeDarkMode {
-    var theme = _sharedPreferences.getString('theme') ?? 'dark';
-
-    return theme == 'dark';
+  String get themeMode {
+    return _sharedPreferences.getString('theme') ?? ThemeMode.system.name;
   }
 
   @override
-  set themeDarkMode(bool value) {
-    _sharedPreferences.setString('theme', value ? 'dark' : 'light');
+  set themeMode(String mode) {
+    _sharedPreferences.setString('theme', mode);
     settingsNotifier.sink.add('theme');
   }
 

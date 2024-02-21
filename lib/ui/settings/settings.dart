@@ -60,12 +60,18 @@ class _SettingsState extends State<Settings> {
               SettingsDividerLabel(label: L.of(context)!.settings_personalisation_divider_label),
               ListTile(
                 shape: const RoundedRectangleBorder(side: BorderSide.none),
-                title: Text(L.of(context)!.settings_theme_switch_label),
-                trailing: Switch.adaptive(
-                    value: snapshot.data!.theme == 'dark',
-                    onChanged: (value) {
-                      settingsBloc.darkMode(value);
-                    }),
+                title: Text(L.of(context)!.settings_theme_dropdown_label),
+                trailing: DropdownMenu<String>(
+                    initialSelection: snapshot.data!.theme,
+                    onSelected: (value) {
+                      settingsBloc.themeMode(value!);
+                    },
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(value: 'auto', label: L.of(context)!.settings_theme_value_auto),
+                      DropdownMenuEntry(value: 'light', label: L.of(context)!.settings_theme_value_light),
+                      DropdownMenuEntry(value: 'dark', label: L.of(context)!.settings_theme_value_dark),
+                    ]
+                ),
               ),
               SettingsDividerLabel(label: L.of(context)!.settings_episodes_divider_label),
               ListTile(
